@@ -10,7 +10,7 @@ public class MouseMouvement : MonoBehaviour
     float yRotation = 0f;
 
     public float topAngle = -90f;
-    public float bottomAngle = 90f;
+    public float bottomAngle = 50f;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +35,7 @@ public class MouseMouvement : MonoBehaviour
         yRotation += mouseX;
 
         // Applying the rotation to the camera
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.parent.localRotation = Quaternion.Euler(0f, yRotation, 0f);
     }
 }
