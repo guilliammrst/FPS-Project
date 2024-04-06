@@ -8,12 +8,17 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        GameObject hit = collision.gameObject;
+        if (hit.transform.parent != null && hit.transform.parent.CompareTag("Enemy"))
         {
-            EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
+            EnemyHealth enemyHealth = hit.transform.parent.GetComponent<EnemyHealth>();
 
             if (enemyHealth != null)
             {
+                if (collision.gameObject.CompareTag("EnemyHead"))
+                {
+                    damage *= 2;
+                }
                 enemyHealth.TakeDamage(damage);
 
                 print("Enemy HP: " + enemyHealth.currentHealth);
@@ -21,9 +26,9 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else if (collision.gameObject.CompareTag("Target"))
+        else if (hit.CompareTag("Target"))
         {
-            print("hit " + collision.gameObject.name + "!");
+            print("hit " + hit.name + "!");
             Destroy(gameObject);
         }
     }
