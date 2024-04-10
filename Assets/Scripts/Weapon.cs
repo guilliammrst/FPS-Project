@@ -72,7 +72,7 @@ public class Weapon : MonoBehaviour
         bullet.transform.forward = shootingDirection;
 
         // Shoot the bullet
-        bullet.GetComponent<Rigidbody>().AddForce(bulletSpawn.forward.normalized * bulletVellocity, ForceMode.Impulse);
+        bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletVellocity, ForceMode.Impulse);
 
         // Destroy the bullet after a certain amount of time
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletLifeTime));
