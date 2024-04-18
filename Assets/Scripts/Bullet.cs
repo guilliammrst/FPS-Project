@@ -65,4 +65,3 @@ public class Bullet : MonoBehaviour
         hole.transform.SetParent(objectWeHit.gameObject.transform);
     }
 }
-
