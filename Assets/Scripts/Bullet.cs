@@ -6,14 +6,19 @@ public class Bullet : MonoBehaviour
 {
     public int damage = 10;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision objectWeHit)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        GameObject hit = objectWeHit.gameObject;
+        if (hit.transform.parent != null && hit.transform.parent.CompareTag("Enemy"))
         {
-            EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
+            EnemyHealth enemyHealth = hit.transform.parent.GetComponent<EnemyHealth>();
 
             if (enemyHealth != null)
             {
+                if (objectWeHit.gameObject.CompareTag("EnemyHead"))
+                {
+                    damage *= 2;
+                }
                 enemyHealth.TakeDamage(damage);
 
                 print("Enemy HP: " + enemyHealth.currentHealth);
@@ -21,11 +26,42 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else if (collision.gameObject.CompareTag("Target"))
+        else if (hit.CompareTag("Target"))
         {
-            print("hit " + collision.gameObject.name + "!");
+            print("hit " + hit.name + "!");
+
+            CreateBulletImpactEffect(objectWeHit);
+
+            Destroy(gameObject);
+        }
+        else if (hit.CompareTag("Wall"))
+        {
+            print("hit a wall");
+
+            CreateBulletImpactEffect(objectWeHit);
+
+            Destroy(gameObject);
+        }
+        else if (hit.CompareTag("Ground"))
+        {
+            print("hit the ground");
+
+            CreateBulletImpactEffect(objectWeHit);
+
             Destroy(gameObject);
         }
     }
-}
 
+    void CreateBulletImpactEffect(Collision objectWeHit)
+    {
+        ContactPoint contact = objectWeHit.contacts[0];
+
+        GameObject hole = Instantiate(
+            GlobalReferences.Instance.bulletImpactEffectPrefab,
+            contact.point,
+            Quaternion.LookRotation(contact.normal)
+            );
+
+        hole.transform.SetParent(objectWeHit.gameObject.transform);
+    }
+}
