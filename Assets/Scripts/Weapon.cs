@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
@@ -25,6 +26,19 @@ public class Weapon : MonoBehaviour
     public float bulletVellocity = 30;
     public float bulletLifeTime = 3f;
 
+    //Weapon variables
+    public int magazineSize = 30;
+    public int magazineBullets;
+
+    //Reload variables
+    public float reloadTime = 250f;
+    public float IsReloadingTime = 0f;
+    public Transform weapon;
+    public bool isReloading;
+
+    //HUD variables
+    public Text bulletCountText;
+
     public enum ShootingMode
     {
         Single,
@@ -34,15 +48,24 @@ public class Weapon : MonoBehaviour
 
     public ShootingMode currentShootingMode;
 
+    public void Start()
+    {
+        bulletCountText = GameObject.Find("BulletCountHUD").GetComponent<Text>();
+        weapon = GameObject.Find("Weapon").GetComponent<Transform>();
+    }
+
     private void Awake()
     {
         readyToShoot = true;
+        isReloading = false;
         burstBulletsLeft = bulletsPerBurst;
+        magazineBullets = magazineSize;    
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (currentShootingMode == ShootingMode.Auto)
         {
             isShooting = Input.GetKey(KeyCode.Mouse0);
@@ -55,8 +78,36 @@ public class Weapon : MonoBehaviour
         if (isShooting && readyToShoot)
         {
             burstBulletsLeft = bulletsPerBurst;
-            FireWeapon();
+            if ( magazineBullets > 0 )
+            {
+                if (isReloading == false)
+                {
+                    FireWeapon();
+                    magazineBullets--;
+                }
+
+            } 
+
         }
+
+
+        if ( Input.GetKeyDown(KeyCode.R) )
+        {
+            isReloading = true;
+        }
+
+        
+        Reload();
+
+        if (magazineBullets == 0)
+        {
+            //print("Press R to Reload !!");
+            isReloading = true;// ----> Auto Reload when out of ammo
+        }
+
+        //HUD
+        bulletCountText.text = magazineBullets.ToString();
+
     }
 
     private void FireWeapon()
@@ -129,5 +180,45 @@ public class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(bullet);
+    }
+
+    private void Reload()
+    {
+        if (isReloading == true)
+        {
+            if (magazineBullets == magazineSize)
+            {
+                print("Mag already full !!");
+            }
+            else
+            {
+                if (IsReloadingTime == reloadTime)
+                {
+                    magazineBullets = magazineSize;
+                    IsReloadingTime = 0f;
+                    isReloading = false;
+                }
+                else
+                {
+                    ReloadAnimation();
+                    IsReloadingTime += 1f;
+                } 
+
+            }
+        }
+        
+    }
+
+    private void ReloadAnimation()
+    {
+        print((IsReloadingTime <= reloadTime / 3) + " / " + (IsReloadingTime >= (reloadTime / 3) * 2));
+        if(IsReloadingTime <= reloadTime/3)
+        {
+            weapon.position = new Vector3(weapon.position.x, weapon.position.y - (0.5f / (reloadTime/3)), weapon.position.z);
+
+        } else if (IsReloadingTime >= (reloadTime / 3)*2) {
+
+            weapon.position = new Vector3(weapon.position.x, weapon.position.y + (0.5f / (reloadTime / 3)), weapon.position.z);
+        }
     }
 }
