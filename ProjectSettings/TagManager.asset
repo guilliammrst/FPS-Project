@@ -9,6 +9,8 @@ TagManager:
   - EnemyHead
   - Wall
   - Ground
+  - PlayerTag
+  - PlayerHead
   layers:
   - Default
   - TransparentFX

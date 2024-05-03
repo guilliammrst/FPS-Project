@@ -10,56 +10,63 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f * 2;
     public float jumpHeight = 3f;
 
+    public int maxHealth = 100;
+    public int currentHealth;
+
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
+    public float damageTimer = 0f;
+    public float healRate = 10f;
 
     Vector3 velocity;
     
     bool isGrounded;
     bool isMoving;
+    bool hasTakenDamage = false;
 
     private Vector3 lastPosition = new Vector3(0f, 0f, 0f);
 
-    // Start is called before the first frame update
+    
     void Start()
     {
+        currentHealth = maxHealth;
         controller = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        // Check if the player is on the ground
+        
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        // If the player is on the ground, reset the velocity
+        
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
-        // Get the input from the player
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        // Create the moving Vector
+        
         Vector3 move = transform.right * x + transform.forward * z;
 
-        // Move the player
+        
         controller.Move(move * speed * Time.deltaTime);
 
-        // Check if the player can jump
+        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            // Jump
+            
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        // Apply gravity
+        
         velocity.y += gravity * Time.deltaTime;
 
-        // Execute the jump
+        
         controller.Move(velocity * Time.deltaTime);
 
         if (lastPosition != gameObject.transform.position && isGrounded)
@@ -72,5 +79,52 @@ public class PlayerMovement : MonoBehaviour
         }
 
         lastPosition = gameObject.transform.position;
+
+        
+        if (hasTakenDamage)
+        {
+            damageTimer += Time.deltaTime;
+
+            if (damageTimer >= 5f)
+            {
+                Heal(healRate);
+                damageTimer = 0f;
+            }
+        }
+    }
+
+        public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        // Réinitialisez le compteur et arrêtez la guérison chaque fois que le joueur prend des dégâts
+        hasTakenDamage = true;
+        damageTimer = 0f;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Heal(float amount)
+    {
+        currentHealth += (int)amount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+            hasTakenDamage = false;
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Le joueur est mort.");
+    
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
