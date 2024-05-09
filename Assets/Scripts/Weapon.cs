@@ -29,6 +29,7 @@ public class Weapon : MonoBehaviour
     //Weapon variables
     public int magazineSize = 30;
     public int magazineBullets;
+    public int numberOfBulletsRemaining;
 
     //Reload variables
     public float reloadTime = 250f;
@@ -51,7 +52,6 @@ public class Weapon : MonoBehaviour
     public void Start()
     {
         bulletCountText = GameObject.Find("BulletCountHUD").GetComponent<Text>();
-        weapon = GameObject.Find("Weapon").GetComponent<Transform>();
     }
 
     private void Awake()
@@ -59,7 +59,8 @@ public class Weapon : MonoBehaviour
         readyToShoot = true;
         isReloading = false;
         burstBulletsLeft = bulletsPerBurst;
-        magazineBullets = magazineSize;    
+        magazineBullets = magazineSize;
+        numberOfBulletsRemaining = magazineSize * 3;
     }
 
     // Update is called once per frame
@@ -106,8 +107,7 @@ public class Weapon : MonoBehaviour
         }
 
         //HUD
-        bulletCountText.text = magazineBullets.ToString();
-
+        bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
     }
 
     private void FireWeapon()
@@ -189,20 +189,43 @@ public class Weapon : MonoBehaviour
             if (magazineBullets == magazineSize)
             {
                 print("Mag already full !!");
+                isReloading = false;
             }
             else
             {
-                if (IsReloadingTime == reloadTime)
+                if (numberOfBulletsRemaining == 0)
                 {
-                    magazineBullets = magazineSize;
-                    IsReloadingTime = 0f;
+                    print("No more bullets !!");
                     isReloading = false;
                 }
                 else
                 {
-                    ReloadAnimation();
-                    IsReloadingTime += 1f;
-                } 
+                    print("Reloading...");
+                
+                    if (IsReloadingTime == reloadTime)
+                    {
+                        int bulletsNeeded = magazineSize - magazineBullets;
+
+                        if (numberOfBulletsRemaining < bulletsNeeded)
+                        {
+                            magazineBullets += numberOfBulletsRemaining;
+                            numberOfBulletsRemaining = 0;
+                        }
+                        else
+                        {
+                            magazineBullets = magazineSize;
+                            numberOfBulletsRemaining -= bulletsNeeded;
+                        }
+
+                        IsReloadingTime = 0f;
+                        isReloading = false;
+                    }
+                    else
+                    {
+                        ReloadAnimation();
+                        IsReloadingTime += 1f;
+                    }
+                }
 
             }
         }
