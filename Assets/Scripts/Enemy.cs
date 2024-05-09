@@ -16,15 +16,11 @@ public class Enemy : MonoBehaviour
     private Transform player; 
     private bool isChasing = false;
 
-    private Vector3 moveDirection;
-
-    public Transform weapon;
-
     public WeaponEnemy WeaponEnemy;
 
     void Start()
     {
-        fireRange = chaseRange / 2;
+        fireRange = chaseRange - chaseRange / 3;
         currentHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("PlayerTag").transform;
 
@@ -37,7 +33,7 @@ public class Enemy : MonoBehaviour
 
         if (distanceToPlayer < fireRange)
         {
-            WeaponEnemy.FireWeapon();
+            FireWeapon();
         }
         else if (distanceToPlayer < chaseRange)
         {
@@ -62,7 +58,6 @@ public class Enemy : MonoBehaviour
             transform.LookAt(patrolPoint);
         }
     }
-
 
     void FireWeapon()
     {

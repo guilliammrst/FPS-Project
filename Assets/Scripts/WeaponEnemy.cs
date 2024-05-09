@@ -17,7 +17,7 @@ public class WeaponEnemy : MonoBehaviour
     public float bulletLifeTime = 2f;
     public float shootingDelay = 3f;
     public int bulletsPerBurst = 3;
-    private bool readyToShoot = true;
+    public bool readyToShoot = true;
 
     public ShootingMode shootingMode = ShootingMode.Single;
     private Transform player;
@@ -28,27 +28,27 @@ public class WeaponEnemy : MonoBehaviour
     }
 
     public void FireWeapon() 
-{
-    if (!readyToShoot)
     {
-        return;
-    }
+        if (!readyToShoot)
+        {
+            return;
+        }
 
-    switch (shootingMode)
-    {
-        case ShootingMode.Single:
-            FireSingleShot();
-            Invoke("ResetShot", shootingDelay);
-            break;
-        case ShootingMode.Burst:
-            StartCoroutine(FireBurst());
-            break;
-        case ShootingMode.Auto:
-            FireSingleShot();
-            Invoke("ResetShot", shootingDelay / 10); 
-            break;
+        switch (shootingMode)
+        {
+            case ShootingMode.Single:
+                FireSingleShot();
+                Invoke("ResetShot", shootingDelay);
+                break;
+            case ShootingMode.Burst:
+                StartCoroutine(FireBurst());
+                break;
+            case ShootingMode.Auto:
+                FireSingleShot();
+                Invoke("ResetShot", shootingDelay / 10); 
+                break;
+        }
     }
-}
 
     void FireSingleShot()
     {

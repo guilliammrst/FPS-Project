@@ -82,7 +82,6 @@ public class Weapon : MonoBehaviour
                 if (isReloading == false)
                 {
                     FireWeapon();
-                    magazineBullets--;
                 }
             }
         }
@@ -122,19 +121,25 @@ public class Weapon : MonoBehaviour
         // Destroy the bullet after a certain amount of time
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletLifeTime));
 
-        // Check if we are done shooting
-        if (allowReset)
-        {
-            Invoke("ResetShot", shootingDelay);
-            allowReset = false;
-        }
+        magazineBullets--;
 
         // Burst
         if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
+            if (weapon.name == "Shotgun")
+            {
+                magazineBullets++;
+            }
+
             burstBulletsLeft--;
-            Invoke("FireWeapon", shootingDelay);
+            FireWeapon();
         }
+        // Check if we are done shooting
+        else if (allowReset)
+        {
+            Invoke("ResetShot", shootingDelay);
+            allowReset = false;
+        }   
     }
 
     private void ResetShot()
