@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,6 +49,7 @@ public class Weapon : MonoBehaviour
 
     public void Start()
     {
+        playerCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         bulletCountText = GameObject.Find("BulletCountHUD").GetComponent<Text>();
     }
 
@@ -66,7 +65,6 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (currentShootingMode == ShootingMode.Auto)
         {
             isShooting = Input.GetKey(KeyCode.Mouse0);
@@ -79,25 +77,21 @@ public class Weapon : MonoBehaviour
         if (isShooting && readyToShoot)
         {
             burstBulletsLeft = bulletsPerBurst;
-            if ( magazineBullets > 0 )
+            if (magazineBullets > 0)
             {
                 if (isReloading == false)
                 {
                     FireWeapon();
                     magazineBullets--;
                 }
-
-            } 
-
+            }
         }
 
-
-        if ( Input.GetKeyDown(KeyCode.R) )
+        if (Input.GetKeyDown(KeyCode.R))
         {
             isReloading = true;
         }
 
-        
         Reload();
 
         if (magazineBullets == 0)
@@ -127,7 +121,7 @@ public class Weapon : MonoBehaviour
 
         // Destroy the bullet after a certain amount of time
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletLifeTime));
-        
+
         // Check if we are done shooting
         if (allowReset)
         {
@@ -166,7 +160,7 @@ public class Weapon : MonoBehaviour
             // Hit nothing
             targetPoint = ray.GetPoint(100);
         }
-        
+
         Vector3 direction = targetPoint - bulletSpawn.position;
 
         // Adding spread
@@ -184,7 +178,7 @@ public class Weapon : MonoBehaviour
 
     private void Reload()
     {
-        if (isReloading == true)
+        if (isReloading)
         {
             if (magazineBullets == magazineSize)
             {
@@ -201,7 +195,7 @@ public class Weapon : MonoBehaviour
                 else
                 {
                     print("Reloading...");
-                
+
                     if (IsReloadingTime == reloadTime)
                     {
                         int bulletsNeeded = magazineSize - magazineBullets;
@@ -222,26 +216,34 @@ public class Weapon : MonoBehaviour
                     }
                     else
                     {
-                        ReloadAnimation();
                         IsReloadingTime += 1f;
+
+                        if (IsReloadingTime < reloadTime)
+                        {
+                            ReloadAnimation();
+                        }
                     }
                 }
 
             }
         }
-        
+        else
+        {
+            weapon.transform.position = weapon.parent.transform.position; // Reset weapon position after reload animation
+        }
     }
 
     private void ReloadAnimation()
     {
-        print((IsReloadingTime <= reloadTime / 3) + " / " + (IsReloadingTime >= (reloadTime / 3) * 2));
-        if(IsReloadingTime <= reloadTime/3)
+        print((IsReloadingTime <= reloadTime / 3) + " / " + (IsReloadingTime >= reloadTime - (reloadTime / 3)));
+        if (IsReloadingTime < reloadTime / 3)
         {
-            weapon.position = new Vector3(weapon.position.x, weapon.position.y - (0.5f / (reloadTime/3)), weapon.position.z);
+            weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y - (0.5f / (reloadTime / 3)), weapon.transform.position.z);
 
-        } else if (IsReloadingTime >= (reloadTime / 3)*2) {
-
-            weapon.position = new Vector3(weapon.position.x, weapon.position.y + (0.5f / (reloadTime / 3)), weapon.position.z);
+        }
+        else if (IsReloadingTime > reloadTime - (reloadTime / 3))
+        {
+            weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y + (0.5f / (reloadTime / 3)), weapon.transform.position.z);
         }
     }
 }
