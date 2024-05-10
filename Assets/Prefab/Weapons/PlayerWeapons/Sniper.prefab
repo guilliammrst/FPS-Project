@@ -42,9 +42,9 @@ GameObject:
   - component: {fileID: 2708211662662320500}
   - component: {fileID: 3350369294804263328}
   - component: {fileID: 7688340750434603118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sniper
-  m_TagString: Untagged
+  m_TagString: PlayerWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   bulletsPerBurst: 0
   burstBulletsLeft: 0
   spreadIntensity: 0
+  bulletDamage: 90
   bulletPrefab: {fileID: 3815004705749872903, guid: eb636c922b1e74c4db8cdcae8af9bfe2, type: 3}
   bulletSpawn: {fileID: 5333829189727209055}
   bulletVellocity: 1500
@@ -117,6 +118,7 @@ MonoBehaviour:
   reloadTime: 1000
   IsReloadingTime: 0
   weapon: {fileID: 2708211662662320500}
+  weaponPrefab: {fileID: 2905652586183243583}
   isReloading: 1
   bulletCountText: {fileID: 0}
   currentShootingMode: 0

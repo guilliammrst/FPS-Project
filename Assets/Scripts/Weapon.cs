@@ -19,6 +19,7 @@ public class Weapon : MonoBehaviour
     public float spreadIntensity;
 
     // Bullet variables
+    public int bulletDamage = 10;
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public float bulletVellocity = 30;
@@ -33,6 +34,7 @@ public class Weapon : MonoBehaviour
     public float reloadTime = 250f;
     public float IsReloadingTime = 0f;
     public Transform weapon;
+    public GameObject weaponPrefab;
     public bool isReloading;
 
     //HUD variables
@@ -65,47 +67,61 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentShootingMode == ShootingMode.Auto)
-        {
-            isShooting = Input.GetKey(KeyCode.Mouse0);
-        }
-        else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
-        {
-            isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-        }
-
-        if (isShooting && readyToShoot)
-        {
-            burstBulletsLeft = bulletsPerBurst;
-            if (magazineBullets > 0)
+        if (weapon.CompareTag("PlayerWeapon"))
+        { 
+            if (weapon.parent.name != null)
             {
-                if (isReloading == false)
+                if (currentShootingMode == ShootingMode.Auto)
                 {
-                    FireWeapon();
+                    isShooting = Input.GetKey(KeyCode.Mouse0);
                 }
+                else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
+                {
+                    isShooting = Input.GetKeyDown(KeyCode.Mouse0);
+                }
+
+                if (isShooting && readyToShoot)
+                {
+                    burstBulletsLeft = bulletsPerBurst;
+                    if (magazineBullets > 0)
+                    {
+                        if (isReloading == false)
+                        {
+                            FireWeapon();
+                        }
+                    }
+                }
+
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    isReloading = true;
+                }
+
+                if (isReloading)
+                {
+                    Reload();
+                }
+
+                if (magazineBullets == 0)
+                {
+                    //print("Press R to Reload !!");
+                    isReloading = true;// ----> Auto Reload when out of ammo
+                }
+
+                //HUD
+                bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            isReloading = true;
-        }
-
-        Reload();
-
-        if (magazineBullets == 0)
-        {
-            //print("Press R to Reload !!");
-            isReloading = true;// ----> Auto Reload when out of ammo
-        }
-
-        //HUD
-        bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
     }
 
     private void FireWeapon()
     {
         readyToShoot = false;
+
+        if (bulletPrefab.GetComponent<Bullet>().damage != bulletDamage)
+        {
+            bulletPrefab.GetComponent<Bullet>().damage = bulletDamage;
+        }
 
         Vector3 shootingDirection = CalculateDirectionWithSpread().normalized;
 
@@ -126,7 +142,7 @@ public class Weapon : MonoBehaviour
         // Burst
         if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
-            if (weapon.name == "Shotgun")
+            if (weapon.name.Contains("Shotgun"))
             {
                 magazineBullets++;
             }
@@ -183,58 +199,52 @@ public class Weapon : MonoBehaviour
 
     private void Reload()
     {
-        if (isReloading)
+        if (magazineBullets == magazineSize)
         {
-            if (magazineBullets == magazineSize)
+            print("Mag already full !!");
+            isReloading = false;
+        }
+        else
+        {
+            if (numberOfBulletsRemaining == 0)
             {
-                print("Mag already full !!");
+                print("No more bullets !!");
                 isReloading = false;
             }
             else
             {
-                if (numberOfBulletsRemaining == 0)
-                {
-                    print("No more bullets !!");
-                    isReloading = false;
-                }
-                else
-                {
-                    print("Reloading...");
+                print("Reloading...");
 
-                    if (IsReloadingTime == reloadTime)
+                if (IsReloadingTime == reloadTime)
+                {
+                    int bulletsNeeded = magazineSize - magazineBullets;
+
+                    if (numberOfBulletsRemaining < bulletsNeeded)
                     {
-                        int bulletsNeeded = magazineSize - magazineBullets;
-
-                        if (numberOfBulletsRemaining < bulletsNeeded)
-                        {
-                            magazineBullets += numberOfBulletsRemaining;
-                            numberOfBulletsRemaining = 0;
-                        }
-                        else
-                        {
-                            magazineBullets = magazineSize;
-                            numberOfBulletsRemaining -= bulletsNeeded;
-                        }
-
-                        IsReloadingTime = 0f;
-                        isReloading = false;
+                        magazineBullets += numberOfBulletsRemaining;
+                        numberOfBulletsRemaining = 0;
                     }
                     else
                     {
-                        IsReloadingTime += 1f;
+                        magazineBullets = magazineSize;
+                        numberOfBulletsRemaining -= bulletsNeeded;
+                    }
 
-                        if (IsReloadingTime < reloadTime)
-                        {
-                            ReloadAnimation();
-                        }
+                    IsReloadingTime = 0f;
+                    isReloading = false;
+
+                    weapon.transform.position = weapon.parent.transform.position; // Reset weapon position after reload animation
+                }
+                else
+                {
+                    IsReloadingTime += 1f;
+
+                    if (IsReloadingTime < reloadTime)
+                    {
+                        ReloadAnimation();
                     }
                 }
-
             }
-        }
-        else
-        {
-            weapon.transform.position = weapon.parent.transform.position; // Reset weapon position after reload animation
         }
     }
 

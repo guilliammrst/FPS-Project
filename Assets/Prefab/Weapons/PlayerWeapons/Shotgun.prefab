@@ -94,9 +94,9 @@ GameObject:
   - component: {fileID: 6322459597138111926}
   - component: {fileID: 5425157995316966836}
   - component: {fileID: 4694335179294406134}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Shotgun
-  m_TagString: Untagged
+  m_TagString: PlayerWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,6 +159,7 @@ MonoBehaviour:
   bulletsPerBurst: 25
   burstBulletsLeft: 0
   spreadIntensity: 2.5
+  bulletDamage: 5
   bulletPrefab: {fileID: 6739070552438409054, guid: c16a92ec6808847888b127101353276e, type: 3}
   bulletSpawn: {fileID: 7959678155716925351}
   bulletVellocity: 750
@@ -169,6 +170,7 @@ MonoBehaviour:
   reloadTime: 750
   IsReloadingTime: 0
   weapon: {fileID: 6322459597138111926}
+  weaponPrefab: {fileID: 1816389343963828238}
   isReloading: 1
   bulletCountText: {fileID: 0}
   currentShootingMode: 1

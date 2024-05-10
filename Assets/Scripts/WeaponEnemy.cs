@@ -11,6 +11,7 @@ public class WeaponEnemy : MonoBehaviour
         Auto
     }
 
+    public int bulletDamage = 10;
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public float bulletVelocity = 20f;
@@ -32,6 +33,11 @@ public class WeaponEnemy : MonoBehaviour
         if (!readyToShoot)
         {
             return;
+        }
+
+        if (bulletPrefab.GetComponent<Bullet>().damage != bulletDamage)
+        {
+            bulletPrefab.GetComponent<Bullet>().damage = bulletDamage;
         }
 
         switch (shootingMode)

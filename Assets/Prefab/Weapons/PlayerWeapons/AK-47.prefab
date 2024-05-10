@@ -208,9 +208,9 @@ GameObject:
   - component: {fileID: 9156643971055616154}
   - component: {fileID: 3099149812217215542}
   - component: {fileID: 7417155088853545430}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AK-47
-  m_TagString: Untagged
+  m_TagString: PlayerWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -274,6 +274,7 @@ MonoBehaviour:
   bulletsPerBurst: 0
   burstBulletsLeft: 0
   spreadIntensity: 0.5
+  bulletDamage: 30
   bulletPrefab: {fileID: 7471167356204425789, guid: 40258049238b2db42a01b6b38dd7c684, type: 3}
   bulletSpawn: {fileID: 2455153180177533799}
   bulletVellocity: 750
@@ -284,6 +285,7 @@ MonoBehaviour:
   reloadTime: 500
   IsReloadingTime: 0
   weapon: {fileID: 9156643971055616154}
+  weaponPrefab: {fileID: 7559232194754467907}
   isReloading: 1
   bulletCountText: {fileID: 0}
   currentShootingMode: 2
