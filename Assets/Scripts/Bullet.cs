@@ -5,51 +5,54 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public int damage = 10;
+    public GameObject shooter;
 
     private void OnCollisionEnter(Collision objectWeHit)
     {
         GameObject hit = objectWeHit.gameObject;
+
+        if (hit == shooter)
+        {
+            return;
+        }
+
         if (hit.transform.parent != null && hit.transform.parent.CompareTag("Enemy"))
         {
-            EnemyHealth enemyHealth = hit.transform.parent.GetComponent<EnemyHealth>();
-
-            if (enemyHealth != null)
+            Enemy Enemy = hit.transform.parent.GetComponent<Enemy>();
+    
+            if (Enemy != null)
             {
                 if (objectWeHit.gameObject.CompareTag("EnemyHead"))
                 {
                     damage *= 2;
                 }
-                enemyHealth.TakeDamage(damage);
-
-                print("Enemy HP: " + enemyHealth.currentHealth);
-
-                Destroy(gameObject);
+                Enemy.TakeDamage(damage);
+    
+                print("Enemy HP: " + Enemy.currentHealth);
             }
         }
-        else if (hit.CompareTag("Target"))
+        else if (hit.CompareTag("PlayerTag"))
         {
-            print("hit " + hit.name + "!");
-
-            CreateBulletImpactEffect(objectWeHit);
-
-            Destroy(gameObject);
+            PlayerMovement player = hit.GetComponent<PlayerMovement>();
+            if (player != null)
+            {
+                if (objectWeHit.gameObject.CompareTag("PlayerHead"))
+                {
+                    damage *= 2;
+                }
+                player.TakeDamage(damage);
+    
+                print("Player HP: " + player.currentHealth);
+            }
         }
-        else if (hit.CompareTag("Wall"))
+        else if (hit.CompareTag("Target") || hit.CompareTag("Wall") || hit.CompareTag("Ground"))
         {
-            print("hit a wall");
-
+            print("Hit " + hit.name + "!");
+    
             CreateBulletImpactEffect(objectWeHit);
-
-            Destroy(gameObject);
         }
-        else if (hit.CompareTag("Ground"))
-        {
-            print("hit the ground");
-
-            CreateBulletImpactEffect(objectWeHit);
-
-            Destroy(gameObject);
-        }
+    
+        Destroy(gameObject);
     }
 
     void CreateBulletImpactEffect(Collision objectWeHit)
