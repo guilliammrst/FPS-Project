@@ -35,6 +35,7 @@ public class Weapon : MonoBehaviour
     public float IsReloadingTime = 0f;
     public Transform weapon;
     public GameObject weaponPrefab;
+    public GameObject weaponPrefabWithArm;
     public bool isReloading;
 
     //HUD variables

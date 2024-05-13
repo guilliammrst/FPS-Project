@@ -63,7 +63,7 @@ public class PickUpItem : MonoBehaviour
         Weapon playerWeapon = GameObject.FindGameObjectWithTag("PlayerWeapon").GetComponent<Weapon>();
 
         // Drop the current weapon
-        GameObject instantiateWeapon = Instantiate(playerWeapon.weaponPrefab, playerWeapon.transform.position, playerWeapon.transform.rotation);
+        GameObject instantiateWeapon = Instantiate(playerWeapon.weaponPrefab, playerWeapon.transform.position + new Vector3(0, -1, 1), playerWeapon.transform.rotation);
         if (instantiateWeapon.GetComponent<Rigidbody>() == null)
         {
             instantiateWeapon.AddComponent<Rigidbody>();
@@ -78,13 +78,15 @@ public class PickUpItem : MonoBehaviour
         instantiateWeapon.GetComponent<Weapon>().magazineBullets = playerWeapon.magazineBullets;
 
         // Pick up the new weapon
-        weapon.transform.SetParent(playerWeapon.transform.parent);
-        weapon.transform.position = playerWeapon.transform.position;
-        weapon.transform.rotation = playerWeapon.transform.rotation;
-        weapon.tag = "PlayerWeapon";
-        weapon.GetComponent<Rigidbody>().isKinematic = true;
+        GameObject newWeapon = Instantiate(weapon.GetComponent<Weapon>().weaponPrefabWithArm);
+        newWeapon.transform.SetParent(playerWeapon.transform.parent);
+        newWeapon.transform.position = playerWeapon.transform.position;
+        newWeapon.transform.rotation = playerWeapon.transform.rotation;
+        newWeapon.GetComponent<Weapon>().numberOfBulletsRemaining = weapon.GetComponent<Weapon>().numberOfBulletsRemaining;
+        newWeapon.GetComponent<Weapon>().magazineBullets = weapon.GetComponent<Weapon>().magazineBullets;
 
-        // Destroy the old weapon
+        // Destroy the old weapon and the on the ground weapon
+        Destroy(weapon.gameObject);
         Destroy(playerWeapon.gameObject);
     }
 }

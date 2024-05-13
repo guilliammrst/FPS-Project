@@ -62,6 +62,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2826702975529357207}
   - {fileID: 3996296156042692430}
   - {fileID: 2602176506338603800}
   - {fileID: 5333829189727209055}
@@ -118,7 +119,8 @@ MonoBehaviour:
   reloadTime: 1000
   IsReloadingTime: 0
   weapon: {fileID: 2708211662662320500}
-  weaponPrefab: {fileID: 2905652586183243583}
+  weaponPrefab: {fileID: 1690935294999862317, guid: 332f7bf55ac7e5343a568f05191025ac, type: 3}
+  weaponPrefabWithArm: {fileID: 2905652586183243583}
   isReloading: 1
   bulletCountText: {fileID: 0}
   currentShootingMode: 0
@@ -288,3 +290,77 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &2355609226032375932
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2708211662662320500}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.39999992
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.49999988
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.375
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.137
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.27396443
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.6368423
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.06637857
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.71761364
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 26.373
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 78.406
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 159.848
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+      propertyPath: m_Name
+      value: soldier_right_arm
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+--- !u!4 &2826702975529357207 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 742311a487acf5a4d9b8c7beac31c3de, type: 3}
+  m_PrefabInstance: {fileID: 2355609226032375932}
+  m_PrefabAsset: {fileID: 0}

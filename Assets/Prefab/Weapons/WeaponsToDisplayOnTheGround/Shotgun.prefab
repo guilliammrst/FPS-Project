@@ -286,6 +286,7 @@ MonoBehaviour:
   IsReloadingTime: 0
   weapon: {fileID: 1642756875143190797}
   weaponPrefab: {fileID: 4364646985718777836}
+  weaponPrefabWithArm: {fileID: 1816389343963828238, guid: 2a3d8cdf08bfcec4e8a1a1989cd1f339, type: 3}
   isReloading: 1
   bulletCountText: {fileID: 0}
   currentShootingMode: 1
