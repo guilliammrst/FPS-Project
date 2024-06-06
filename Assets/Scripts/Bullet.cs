@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour
         }
         else if (hit.CompareTag("PlayerTag"))
         {
-            PlayerMovement player = hit.GetComponent<PlayerMovement>();
+            PlayerSystem player = hit.GetComponent<PlayerSystem>();
             if (player != null)
             {
                 if (objectWeHit.gameObject.CompareTag("PlayerHead"))
