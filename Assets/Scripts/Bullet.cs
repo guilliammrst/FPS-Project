@@ -18,18 +18,7 @@ public class Bullet : MonoBehaviour
 
         if (hit.transform.parent != null && hit.transform.parent.CompareTag("Enemy"))
         {
-            Enemy Enemy = hit.transform.parent.GetComponent<Enemy>();
-    
-            if (Enemy != null)
-            {
-                if (objectWeHit.gameObject.CompareTag("EnemyHead"))
-                {
-                    damage *= 2;
-                }
-                Enemy.TakeDamage(damage);
-    
-                print("Enemy HP: " + Enemy.currentHealth);
-            }
+
         }
         else if (hit.CompareTag("PlayerTag"))
         {
@@ -41,15 +30,31 @@ public class Bullet : MonoBehaviour
                     damage *= 2;
                 }
                 player.TakeDamage(damage);
-    
+
                 print("Player HP: " + player.currentHealth);
             }
         }
         else if (hit.CompareTag("Target") || hit.CompareTag("Wall") || hit.CompareTag("Ground"))
         {
             print("Hit " + hit.name + "!");
-    
+
             CreateBulletImpactEffect(objectWeHit);
+        }
+        else if (hit.CompareTag("Enemy"))
+        {
+            Enemy Enemy = hit.GetComponent<Enemy>();
+
+            if (Enemy != null)
+            {
+                if (objectWeHit.gameObject.CompareTag("EnemyHead"))
+                {
+                    damage *= 2;
+                }
+
+                Enemy.TakeDamage(damage);
+
+                print("Enemy HP: " + Enemy.currentHealth);
+            }
         }
     
         Destroy(gameObject);
