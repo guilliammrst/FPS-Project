@@ -16,11 +16,7 @@ public class Bullet : MonoBehaviour
             return;
         }
 
-        if (hit.transform.parent != null && hit.transform.parent.CompareTag("Enemy"))
-        {
-
-        }
-        else if (hit.CompareTag("PlayerTag"))
+        if (hit.CompareTag("PlayerTag"))
         {
             PlayerSystem player = hit.GetComponent<PlayerSystem>();
             if (player != null)
