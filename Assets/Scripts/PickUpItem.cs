@@ -63,7 +63,7 @@ public class PickUpItem : MonoBehaviour
         Weapon playerWeapon = GameObject.FindGameObjectWithTag("PlayerWeapon").GetComponent<Weapon>();
 
         // Drop the current weapon
-        GameObject instantiateWeapon = Instantiate(playerWeapon.weaponPrefab, playerWeapon.transform.position + new Vector3(0, -1, 1), playerWeapon.transform.rotation);
+        GameObject instantiateWeapon = Instantiate(playerWeapon.weaponPrefab, playerWeapon.transform.position + new Vector3(0, -1, 1), playerWeapon.transform.rotation * new Quaternion(1, 0, 1, 1));
         if (instantiateWeapon.GetComponent<Rigidbody>() == null)
         {
             instantiateWeapon.AddComponent<Rigidbody>();
