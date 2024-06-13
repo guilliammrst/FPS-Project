@@ -8,6 +8,10 @@ public class GlobalReferences : MonoBehaviour
 
     public GameObject bulletImpactEffectPrefab;
 
+    public GameObject hitMarkerRed;
+
+    public GameObject hitMarkerWhite;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -18,5 +22,23 @@ public class GlobalReferences : MonoBehaviour
         {
             Instance = this;
         }
+    }
+
+    public void ActiveHitMarkerRed()
+    {
+        hitMarkerRed.SetActive(true);
+        StartCoroutine(DisableHitMarker(hitMarkerRed));
+    }
+
+    public void ActiveHitMarkerWhite()
+    {
+        hitMarkerWhite.SetActive(true);
+        StartCoroutine(DisableHitMarker(hitMarkerWhite));
+    }
+
+    public IEnumerator DisableHitMarker(GameObject hitMarker)
+    {
+        yield return new WaitForSeconds(0.5f);
+        hitMarker.SetActive(false);
     }
 }
