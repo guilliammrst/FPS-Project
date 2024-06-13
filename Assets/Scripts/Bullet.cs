@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour
 {
     public int damage = 10;
     public GameObject shooter;
+
+    public GlobalReferences globalReferences;
+
+    void Start()
+    {
+        globalReferences = GameObject.Find("GlobalReferences").GetComponent<GlobalReferences>();
+    }
 
     private void OnCollisionEnter(Collision objectWeHit)
     {
@@ -38,18 +46,25 @@ public class Bullet : MonoBehaviour
         }
         else if (hit.CompareTag("Enemy"))
         {
-            Enemy Enemy = hit.GetComponent<Enemy>();
+            Enemy enemy = hit.GetComponent<Enemy>();
 
-            if (Enemy != null)
+            if (enemy != null)
             {
                 if (objectWeHit.gameObject.CompareTag("EnemyHead"))
                 {
                     damage *= 2;
                 }
+                enemy.TakeDamage(damage);
 
-                Enemy.TakeDamage(damage);
+                if ( enemy.currentHealth <= 0 )
+                {
+                    globalReferences.ActiveHitMarkerRed();
+                }
+                else {
+                    globalReferences.ActiveHitMarkerWhite();
+                }
 
-                print("Enemy HP: " + Enemy.currentHealth);
+                print("Enemy HP: " + enemy.currentHealth);
             }
         }
     
