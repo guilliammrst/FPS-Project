@@ -1382,7 +1382,7 @@ MonoBehaviour:
   bulletDamage: 30
   bulletPrefab: {fileID: 7471167356204425789, guid: 40258049238b2db42a01b6b38dd7c684, type: 3}
   bulletSpawn: {fileID: 2455153180177533799}
-  bulletVellocity: 750
+  bulletVellocity: 7500
   bulletLifeTime: 2.5
   magazineSize: 30
   magazineBullets: 0
