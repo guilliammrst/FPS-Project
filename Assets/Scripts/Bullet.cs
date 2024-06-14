@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Bullet : MonoBehaviour
 {
     public int damage = 10;
-    public GameObject shooter;
+    public string shooter;
 
     public GlobalReferences globalReferences;
 
@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     {
         GameObject hit = objectWeHit.gameObject;
 
-        if (hit == shooter)
+        if (hit.name.Contains(shooter))
         {
             return;
         }
