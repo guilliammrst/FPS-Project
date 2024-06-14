@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GlobalReferences : MonoBehaviour
 {
@@ -9,8 +10,21 @@ public class GlobalReferences : MonoBehaviour
     public GameObject bulletImpactEffectPrefab;
 
     public GameObject hitMarkerRed;
-
     public GameObject hitMarkerWhite;
+
+    public GameObject bloodScreen;
+
+    private PlayerSystem playerSystem;
+    private RawImage bloodRawImage;
+
+    void Start()
+    {
+        bloodScreen.SetActive(true);
+        bloodScreen.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        bloodRawImage = bloodScreen.GetComponent<RawImage>();
+
+        playerSystem = GameObject.FindGameObjectWithTag("PlayerTag").GetComponent<PlayerSystem>();
+    }
 
     private void Awake()
     {
@@ -21,6 +35,26 @@ public class GlobalReferences : MonoBehaviour
         else
         {
             Instance = this;
+        }
+    }
+
+    void Update()
+    {
+        if (playerSystem.currentHealth < playerSystem.maxHealth * 0.25)
+        {             
+            bloodRawImage.color = new Color(bloodRawImage.color.r, bloodRawImage.color.g, bloodRawImage.color.b, 1);
+        }
+        else if (playerSystem.currentHealth < playerSystem.maxHealth * 0.5)
+        {
+            bloodRawImage.color = new Color(bloodRawImage.color.r, bloodRawImage.color.g, bloodRawImage.color.b, 0.5f);
+        }
+        else if (playerSystem.currentHealth < playerSystem.maxHealth)
+        {
+            bloodRawImage.color = new Color(bloodRawImage.color.r, bloodRawImage.color.g, bloodRawImage.color.b, 0.25f);
+        }
+        else if (playerSystem.currentHealth == playerSystem.maxHealth)
+        {
+            bloodRawImage.color = new Color(bloodRawImage.color.r, bloodRawImage.color.g, bloodRawImage.color.b, 0);
         }
     }
 
