@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ public class Bullet : MonoBehaviour
     {
         GameObject hit = objectWeHit.gameObject;
 
-        if (hit.name.Contains(shooter))
+        if (hit.name.Contains(shooter) && shooter != null && shooter != "")
         {
             return;
         }
