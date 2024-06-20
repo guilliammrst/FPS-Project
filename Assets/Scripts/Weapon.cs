@@ -55,6 +55,9 @@ public class Weapon : MonoBehaviour
     public GameObject weaponPrefabWithArm;
     public bool isReloading;
 
+    // Muzzle effect variables 
+    public GameObject muzzleEffect;
+
     //HUD variables
     public Text bulletCountText;
 
@@ -156,6 +159,8 @@ public class Weapon : MonoBehaviour
 
     private void FireWeapon()
     {
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
+
         readyToShoot = false;
 
         if (bulletPrefab.GetComponent<Bullet>().damage != bulletDamage)

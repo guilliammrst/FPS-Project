@@ -23,6 +23,8 @@ public class WeaponEnemy : MonoBehaviour
     public ShootingMode shootingMode = ShootingMode.Single;
     private Transform player;
 
+    public GameObject muzzleEffect;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("PlayerTag").transform;
@@ -39,6 +41,8 @@ public class WeaponEnemy : MonoBehaviour
         {
             bulletPrefab.GetComponent<Bullet>().damage = bulletDamage;
         }
+
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
 
         switch (shootingMode)
         {
