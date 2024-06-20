@@ -63,13 +63,8 @@ public class WeaponEnemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
         bullet.transform.forward = shootingDirection;
         bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletVelocity, ForceMode.Impulse);
-    
-        Bullet bulletComponent = bullet.GetComponent<Bullet>();
-        if (bulletComponent != null)
-        {
-            bulletComponent.shooter = gameObject;
-        }
-    
+        bullet.GetComponent<Bullet>().shooter = "Enemy";
+
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletLifeTime));
     
         readyToShoot = false;

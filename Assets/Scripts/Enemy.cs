@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -18,30 +20,54 @@ public class Enemy : MonoBehaviour
 
     public WeaponEnemy WeaponEnemy;
 
+    private Animator animator;
+    private bool isDied = false;
+
+    public float despawnDelayAfterDeath = 5f;
+    
+    public GameObject weaponPrefabToDisplay;
+
+    private float timePatroling = 5f;
+    
     void Start()
     {
         fireRange = chaseRange - chaseRange / 3;
         currentHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("PlayerTag").transform;
 
+        animator = GetComponent<Animator>();
+
         SetRandomPatrolPoint();
     }
 
     void Update()
     {
+        if (isDied)
+        {
+            return;
+        }
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer < fireRange)
         {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isFiring", true);
             FireWeapon();
-        }
-        else if (distanceToPlayer < chaseRange)
-        {
-            ChasePlayer();
         }
         else
         {
-            isChasing = false;
+            animator.SetBool("isFiring", false);
+            animator.SetBool("isWalking", true);
+
+            if (distanceToPlayer < chaseRange)
+            {
+                ChasePlayer();
+            }
+            else
+            {
+                isChasing = false;
+            }
         }
     
         if (!isChasing)
@@ -52,6 +78,7 @@ public class Enemy : MonoBehaviour
         if (isChasing)
         {
             transform.LookAt(player);
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
         else
         {
@@ -66,9 +93,18 @@ public class Enemy : MonoBehaviour
 
     void Patrol()
     {
-        if (Vector3.Distance(transform.position, patrolPoint) < 1f)
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("DAMAGE"))
+        {
+            return;
+        }
+
+        if (Vector3.Distance(transform.position, patrolPoint) < 1f || timePatroling <= 0)
         {
             SetRandomPatrolPoint();
+        }
+        else
+        {
+            timePatroling -= Time.deltaTime;
         }
 
         transform.position = Vector3.MoveTowards(transform.position, patrolPoint, moveSpeed * Time.deltaTime);
@@ -76,6 +112,8 @@ public class Enemy : MonoBehaviour
 
     void SetRandomPatrolPoint()
     {
+        timePatroling = 5f;
+
         Vector3 point;
         do
         {
@@ -85,27 +123,59 @@ public class Enemy : MonoBehaviour
         while (point.x < -100 || point.x > 100 || point.z < -100 || point.z > 100);
 
         patrolPoint = point;
+        patrolPoint.y = 0;
 
         Patrol();
     }
 
     void ChasePlayer()
     {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsTag("DAMAGE"))
+        {
+            return;
+        }
+
         transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         isChasing = true;
     }
 
     public void TakeDamage(int damage)
     {
+        if (isDied)
+        {
+            return;
+        }
+
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            Die();
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isFiring", false);
+            animator.SetTrigger("DIE");
+            isDied = true;
+
+            StartCoroutine(Die(despawnDelayAfterDeath));
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isFiring", false);
+            animator.SetTrigger("DAMAGE");
         }
     }
 
-    void Die()
+    private IEnumerator Die(float delay)
     {
+        yield return new WaitForSeconds(delay);
+
+        GameObject instantiateWeapon = Instantiate(weaponPrefabToDisplay, transform.position + new Vector3(0, 1, 1), transform.rotation * new Quaternion(1, 0, 1, 1));
+        if (instantiateWeapon.GetComponent<Rigidbody>() == null)
+        {
+            instantiateWeapon.AddComponent<Rigidbody>();
+            instantiateWeapon.GetComponent<Rigidbody>().mass = 50f;
+        }
+
         Destroy(gameObject);
     }
 }

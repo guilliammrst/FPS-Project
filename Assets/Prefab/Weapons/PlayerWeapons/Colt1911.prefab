@@ -321,6 +321,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 0}
+  crosshair: {fileID: 0}
+  crosshairSize: 20
+  baseCrosshair: {fileID: 0}
+  sniperCrosshair: {fileID: 0}
+  baseFOV: 60
+  zooming: 0
+  zoomed: 0
+  zoomTime: 0.5
+  zoomMultiplyer: 2
+  zoomFOV: 5
   isShooting: 0
   readyToShoot: 0
   shootingDelay: 0.2
@@ -330,7 +340,7 @@ MonoBehaviour:
   bulletDamage: 20
   bulletPrefab: {fileID: 6739070552438409054, guid: c16a92ec6808847888b127101353276e, type: 3}
   bulletSpawn: {fileID: 5449446105137048872}
-  bulletVellocity: 500
+  bulletVellocity: 5000
   bulletLifeTime: 2.5
   magazineSize: 7
   magazineBullets: 0
