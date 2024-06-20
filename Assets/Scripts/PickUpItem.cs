@@ -55,6 +55,8 @@ public class PickUpItem : MonoBehaviour
             playerWeapon.numberOfBulletsRemaining += playerWeapon.magazineSize;
         }
 
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.pickUpAmmoBoxSound);
+
         Destroy(ammoBox);
     }
 
@@ -84,6 +86,8 @@ public class PickUpItem : MonoBehaviour
         newWeapon.transform.rotation = playerWeapon.transform.rotation;
         newWeapon.GetComponent<Weapon>().numberOfBulletsRemaining = weapon.GetComponent<Weapon>().numberOfBulletsRemaining;
         newWeapon.GetComponent<Weapon>().magazineBullets = weapon.GetComponent<Weapon>().magazineBullets;
+
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.weaponDropSound);
 
         // Destroy the old weapon and the on the ground weapon
         Destroy(weapon.gameObject);

@@ -64,13 +64,11 @@ public class WeaponEnemy : MonoBehaviour
     {
         if (gameObject.name.Contains("Colt"))
         {
-            SoundManager.Instance.audioSource.clip = SoundManager.Instance.coltSound;
-            SoundManager.Instance.audioSource.Play();
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.coltSound);
         }
         else if (gameObject.name.Contains("AK-47"))
         {
-            SoundManager.Instance.audioSource.clip = SoundManager.Instance.ak47Sound;
-            SoundManager.Instance.audioSource.Play();
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.ak47Sound);
         }
 
         Vector3 shootingDirection = (player.position - transform.position).normalized;

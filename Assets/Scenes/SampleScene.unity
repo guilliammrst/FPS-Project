@@ -812,6 +812,11 @@ MonoBehaviour:
   coltSound: {fileID: 8300000, guid: d679c26b726656f4e98a673d6dd3f94f, type: 3}
   ak47Sound: {fileID: 8300000, guid: 91d99fc61218ff545aa0858f53caf3ff, type: 3}
   reloadingSound: {fileID: 8300000, guid: 9489633b04252cf4a9c47be32d563857, type: 3}
+  removeMagSound: {fileID: 8300000, guid: 36a6682527a67434c89e48b5fbfef53d, type: 3}
+  manHurt: {fileID: 8300000, guid: 849702113a71e9b4db8c3a04f1c78191, type: 3}
+  manDie: {fileID: 8300000, guid: c9f538bce56acce4c8ac079659fd4ebc, type: 3}
+  weaponDropSound: {fileID: 8300000, guid: 07758e19bf949994a8660733352abf3f, type: 3}
+  pickUpAmmoBoxSound: {fileID: 8300000, guid: e105b533481e6464d804c90401649fd1, type: 3}
 --- !u!4 &497447410
 Transform:
   m_ObjectHideFlags: 0

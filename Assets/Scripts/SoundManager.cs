@@ -12,6 +12,11 @@ public class SoundManager : MonoBehaviour
     public AudioClip coltSound;
     public AudioClip ak47Sound;
     public AudioClip reloadingSound;
+    public AudioClip removeMagSound;
+    public AudioClip manHurt;
+    public AudioClip manDie;
+    public AudioClip weaponDropSound;
+    public AudioClip pickUpAmmoBoxSound;
 
     private void Awake()
     {

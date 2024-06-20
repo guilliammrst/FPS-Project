@@ -101,7 +101,13 @@ public class PlayerSystem : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.manDie);
+
             Die();
+        }
+        else
+        {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.manHurt);
         }
     }
 

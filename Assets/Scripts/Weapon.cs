@@ -54,7 +54,7 @@ public class Weapon : MonoBehaviour
     public GameObject weaponPrefab;
     public GameObject weaponPrefabWithArm;
     public bool isReloading;
-    private bool isToBottom = false;
+    private bool isToBottom = true;
 
     // Muzzle effect variables 
     public GameObject muzzleEffect;
@@ -190,18 +190,15 @@ public class Weapon : MonoBehaviour
         {
             if (weapon.name.Contains("Colt"))
             {
-                SoundManager.Instance.audioSource.clip = SoundManager.Instance.coltSound;
-                SoundManager.Instance.audioSource.Play();
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.coltSound);
             }
             else if (weapon.name.Contains("Sniper"))
             {
-                SoundManager.Instance.audioSource.clip = SoundManager.Instance.sniperSound;
-                SoundManager.Instance.audioSource.Play();
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.sniperSound);
             }
             else if (weapon.name.Contains("AK-47"))
             {
-                SoundManager.Instance.audioSource.clip = SoundManager.Instance.ak47Sound;
-                SoundManager.Instance.audioSource.Play();
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.ak47Sound);
             }
         }
         
@@ -214,14 +211,12 @@ public class Weapon : MonoBehaviour
 
                 if (burstBulletsLeft == bulletsPerBurst)
                 {
-                    SoundManager.Instance.audioSource.clip = SoundManager.Instance.shotgunSound;
-                    SoundManager.Instance.audioSource.Play();
+                    SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.shotgunSound);
                 }
             }
             else if (weapon.name.Contains("Uzi") && burstBulletsLeft == bulletsPerBurst)
             {
-                SoundManager.Instance.audioSource.clip = SoundManager.Instance.uziSound;
-                SoundManager.Instance.audioSource.Play();
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.uziSound);
             }
 
             burstBulletsLeft--;
@@ -316,8 +311,6 @@ public class Weapon : MonoBehaviour
                     isReloading = false;
 
                     weapon.transform.position = weapon.parent.transform.position; // Reset weapon position after reload animation
-
-                    isToBottom = false;
                 }
                 else
                 {
@@ -337,14 +330,20 @@ public class Weapon : MonoBehaviour
         print((IsReloadingTime <= reloadTime / 3) + " / " + (IsReloadingTime >= reloadTime - (reloadTime / 3)));
         if (IsReloadingTime < reloadTime / 3)
         {
+            if (isToBottom)
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.removeMagSound);
+
+                isToBottom = false;
+            }
+
             weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y - (0.5f / (reloadTime / 3)), weapon.transform.position.z);
         }
         else if (IsReloadingTime > reloadTime - (reloadTime / 3))
         {
             if (!isToBottom)
             {
-                SoundManager.Instance.audioSource.clip = SoundManager.Instance.reloadingSound;
-                SoundManager.Instance.audioSource.Play();
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.reloadingSound);
 
                 isToBottom = true;
             }
