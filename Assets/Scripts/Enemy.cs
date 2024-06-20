@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,8 @@ public class Enemy : MonoBehaviour
     public float despawnDelayAfterDeath = 5f;
     
     public GameObject weaponPrefabToDisplay;
+
+    private float timePatroling = 5f;
     
     void Start()
     {
@@ -95,9 +98,13 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        if (Vector3.Distance(transform.position, patrolPoint) < 1f)
+        if (Vector3.Distance(transform.position, patrolPoint) < 1f || timePatroling <= 0)
         {
             SetRandomPatrolPoint();
+        }
+        else
+        {
+            timePatroling -= Time.deltaTime;
         }
 
         transform.position = Vector3.MoveTowards(transform.position, patrolPoint, moveSpeed * Time.deltaTime);
@@ -105,6 +112,8 @@ public class Enemy : MonoBehaviour
 
     void SetRandomPatrolPoint()
     {
+        timePatroling = 5f;
+
         Vector3 point;
         do
         {

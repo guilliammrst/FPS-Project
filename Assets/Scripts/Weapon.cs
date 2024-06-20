@@ -17,8 +17,8 @@ public class Weapon : MonoBehaviour
     public float baseFOV = 60f;
     public bool zooming = false;
     public bool zoomed = false;
-    public float zoomTime = 0.1f;
-    public float zoomMultiplyer = 1.4f;
+    public float zoomTime = 0.5f;
+    public float zoomMultiplyer = 2f;
     public float zoomFOV = 5f;
 
 
@@ -115,10 +115,6 @@ public class Weapon : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.R))
                 {
-                    if (zoomed)
-                    {
-                        zooming = true;
-                    }
                     isReloading = true;
                                       
                 }
@@ -177,6 +173,7 @@ public class Weapon : MonoBehaviour
 
         // Shoot the bullet
         bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletVellocity, ForceMode.Impulse);
+        bullet.GetComponent<Bullet>().shooter = "Player";
 
         // Destroy the bullet after a certain amount of time
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletLifeTime));
@@ -258,6 +255,11 @@ public class Weapon : MonoBehaviour
             else
             {
                 print("Reloading...");
+
+                if (zoomed)
+                {
+                    zooming = true;
+                }
 
                 if (IsReloadingTime == reloadTime)
                 {
