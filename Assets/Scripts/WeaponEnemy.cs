@@ -62,6 +62,17 @@ public class WeaponEnemy : MonoBehaviour
 
     void FireSingleShot()
     {
+        if (gameObject.name.Contains("Colt"))
+        {
+            SoundManager.Instance.audioSource.clip = SoundManager.Instance.coltSound;
+            SoundManager.Instance.audioSource.Play();
+        }
+        else if (gameObject.name.Contains("AK-47"))
+        {
+            SoundManager.Instance.audioSource.clip = SoundManager.Instance.ak47Sound;
+            SoundManager.Instance.audioSource.Play();
+        }
+
         Vector3 shootingDirection = (player.position - transform.position).normalized;
     
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
