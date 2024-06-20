@@ -1,10 +1,26 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
     public Camera playerCamera;
+
+    //Crosshair variables 
+    public GameObject crosshair;
+    public float crosshairSize = 20f;
+    public Texture2D baseCrosshair;
+    public Texture2D sniperCrosshair;
+
+    //Camera Zoom variables
+    public float baseFOV = 60f;
+    public bool zooming = false;
+    public bool zoomed = false;
+    public float zoomTime = 0.1f;
+    public float zoomMultiplyer = 1.4f;
+    public float zoomFOV = 5f;
+
 
     // Shooting variables
     public bool isShooting, readyToShoot;
@@ -29,6 +45,7 @@ public class Weapon : MonoBehaviour
     public int magazineSize = 30;
     public int magazineBullets;
     public int numberOfBulletsRemaining;
+    
 
     //Reload variables
     public float reloadTime = 250f;
@@ -54,6 +71,9 @@ public class Weapon : MonoBehaviour
     {
         playerCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         bulletCountText = GameObject.Find("BulletCountHUD").GetComponent<Text>();
+        crosshair = GameObject.Find("Crosshair");
+        baseCrosshair = (Texture2D)Resources.Load("HUD/crosshair");
+        sniperCrosshair = (Texture2D)Resources.Load<Texture>("HUD/sniperscope");
     }
 
     private void Awake()
@@ -95,7 +115,12 @@ public class Weapon : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.R))
                 {
+                    if (zoomed)
+                    {
+                        zooming = true;
+                    }
                     isReloading = true;
+                                      
                 }
 
                 if (isReloading)
@@ -112,7 +137,25 @@ public class Weapon : MonoBehaviour
                 //HUD
                 bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
             }
+
+            // Zooming function
+            if (weapon.name.Contains("Sniper"))
+            {
+                if (Input.GetKeyDown(KeyCode.Mouse1))
+                {
+                    print(weapon.name);
+                    if (!zooming && !isReloading)
+                    {
+                        zooming = true;
+                    }
+
+
+                }
+            }
+
+            zoomFunction();
         }
+        
     }
 
     private void FireWeapon()
@@ -260,6 +303,44 @@ public class Weapon : MonoBehaviour
         else if (IsReloadingTime > reloadTime - (reloadTime / 3))
         {
             weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y + (0.5f / (reloadTime / 3)), weapon.transform.position.z);
+        }
+    }
+
+
+    private void zoomFunction()
+    {
+        if (zooming)
+        {
+
+            if (!zoomed)
+            {
+                crosshair.GetComponent<RawImage>().texture = sniperCrosshair;
+                crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+                if (Camera.main.fieldOfView > zoomFOV)
+                {
+                    Camera.main.fieldOfView -= zoomTime * zoomMultiplyer;
+                }
+                else
+                {
+                    zooming = false;
+                    zoomed = true;
+                }
+            }
+            else
+            {
+
+                if (Camera.main.fieldOfView < baseFOV)
+                {
+                    Camera.main.fieldOfView += zoomTime * zoomMultiplyer;
+                }
+                else
+                {
+                    zooming = false;
+                    zoomed = false;
+                    crosshair.GetComponent<RawImage>().texture = baseCrosshair;
+                    crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(crosshairSize, crosshairSize);
+                }
+            }
         }
     }
 }
