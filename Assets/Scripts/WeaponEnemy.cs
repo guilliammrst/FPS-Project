@@ -23,6 +23,8 @@ public class WeaponEnemy : MonoBehaviour
     public ShootingMode shootingMode = ShootingMode.Single;
     private Transform player;
 
+    public GameObject muzzleEffect;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("PlayerTag").transform;
@@ -39,6 +41,8 @@ public class WeaponEnemy : MonoBehaviour
         {
             bulletPrefab.GetComponent<Bullet>().damage = bulletDamage;
         }
+
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
 
         switch (shootingMode)
         {
@@ -58,6 +62,15 @@ public class WeaponEnemy : MonoBehaviour
 
     void FireSingleShot()
     {
+        if (gameObject.name.Contains("Colt"))
+        {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.coltSound);
+        }
+        else if (gameObject.name.Contains("AK-47"))
+        {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.ak47Sound);
+        }
+
         Vector3 shootingDirection = (player.position - transform.position).normalized;
     
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);

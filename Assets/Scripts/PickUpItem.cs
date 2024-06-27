@@ -39,6 +39,16 @@ public class PickUpItem : MonoBehaviour
                     PickUpWeapon(hit.transform.gameObject);
                 }
             }
+            else if (hit.transform.CompareTag("Grenade"))
+            {
+                pickupText.GetComponent<Text>().text = "Press E to pick up grenade";
+                pickupText.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickUpGrenade(hit.transform.gameObject);
+                }
+            }
         }
         else
         {
@@ -55,12 +65,33 @@ public class PickUpItem : MonoBehaviour
             playerWeapon.numberOfBulletsRemaining += playerWeapon.magazineSize;
         }
 
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.pickUpAmmoBoxSound);
+
         Destroy(ammoBox);
     }
 
     private void PickUpWeapon(GameObject weapon)
     {
         Weapon playerWeapon = GameObject.FindGameObjectWithTag("PlayerWeapon").GetComponent<Weapon>();
+
+        if (playerWeapon.zoomed)
+        {
+            Camera.main.fieldOfView = playerWeapon.baseFOV;
+
+            if (playerWeapon.name.Contains("Sniper"))
+            {
+                playerWeapon.crosshair.GetComponent<RawImage>().texture = playerWeapon.baseCrosshair;
+                playerWeapon.crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(playerWeapon.crosshairSize, playerWeapon.crosshairSize);
+            }
+            else
+            {
+                playerWeapon.transform.position = playerWeapon.transform.parent.position;
+                playerWeapon.transform.GetChild(1).gameObject.SetActive(true);
+                playerWeapon.crosshair.SetActive(true);
+            }
+
+            playerWeapon.zoomed = false;
+        }
 
         // Drop the current weapon
         GameObject instantiateWeapon = Instantiate(playerWeapon.weaponPrefab, playerWeapon.transform.position + new Vector3(0, -1, 1), playerWeapon.transform.rotation * new Quaternion(1, 0, 1, 1));
@@ -80,13 +111,26 @@ public class PickUpItem : MonoBehaviour
         // Pick up the new weapon
         GameObject newWeapon = Instantiate(weapon.GetComponent<Weapon>().weaponPrefabWithArm);
         newWeapon.transform.SetParent(playerWeapon.transform.parent);
-        newWeapon.transform.position = playerWeapon.transform.position;
+        newWeapon.transform.position = newWeapon.transform.parent.position;
         newWeapon.transform.rotation = playerWeapon.transform.rotation;
         newWeapon.GetComponent<Weapon>().numberOfBulletsRemaining = weapon.GetComponent<Weapon>().numberOfBulletsRemaining;
         newWeapon.GetComponent<Weapon>().magazineBullets = weapon.GetComponent<Weapon>().magazineBullets;
 
+        SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.weaponDropSound);
+
         // Destroy the old weapon and the on the ground weapon
         Destroy(weapon.gameObject);
         Destroy(playerWeapon.gameObject);
+    }
+
+    private void PickUpGrenade(GameObject grenade)
+    {
+        PlayerSystem player = GameObject.FindGameObjectWithTag("PlayerTag").GetComponent<PlayerSystem>();
+        if (player != null)
+        {
+            player.numberOfGrenades++;
+        }
+
+        Destroy(grenade);
     }
 }

@@ -54,6 +54,10 @@ public class Weapon : MonoBehaviour
     public GameObject weaponPrefab;
     public GameObject weaponPrefabWithArm;
     public bool isReloading;
+    private bool isToBottom = true;
+
+    // Muzzle effect variables 
+    public GameObject muzzleEffect;
 
     //HUD variables
     public Text bulletCountText;
@@ -113,7 +117,7 @@ public class Weapon : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.R) || magazineBullets == 0)
                 {
                     isReloading = true;
                                       
@@ -124,19 +128,12 @@ public class Weapon : MonoBehaviour
                     Reload();
                 }
 
-                if (magazineBullets == 0)
-                {
-                    //print("Press R to Reload !!");
-                    isReloading = true;// ----> Auto Reload when out of ammo
-                }
-
                 //HUD
                 bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
             }
 
             // Zooming function
-            if (weapon.name.Contains("Sniper"))
-            {
+            
                 if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     print(weapon.name);
@@ -147,7 +144,7 @@ public class Weapon : MonoBehaviour
 
 
                 }
-            }
+            
 
             zoomFunction();
         }
@@ -156,6 +153,8 @@ public class Weapon : MonoBehaviour
 
     private void FireWeapon()
     {
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
+
         readyToShoot = false;
 
         if (bulletPrefab.GetComponent<Bullet>().damage != bulletDamage)
@@ -180,12 +179,37 @@ public class Weapon : MonoBehaviour
 
         magazineBullets--;
 
+        if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Auto)
+        {
+            if (weapon.name.Contains("Colt"))
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.coltSound);
+            }
+            else if (weapon.name.Contains("Sniper"))
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.sniperSound);
+            }
+            else if (weapon.name.Contains("AK-47"))
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.ak47Sound);
+            }
+        }
+        
         // Burst
         if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
             if (weapon.name.Contains("Shotgun"))
             {
                 magazineBullets++;
+
+                if (burstBulletsLeft == bulletsPerBurst)
+                {
+                    SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.shotgunSound);
+                }
+            }
+            else if (weapon.name.Contains("Uzi") && burstBulletsLeft == bulletsPerBurst)
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.uziSound);
             }
 
             burstBulletsLeft--;
@@ -299,11 +323,24 @@ public class Weapon : MonoBehaviour
         print((IsReloadingTime <= reloadTime / 3) + " / " + (IsReloadingTime >= reloadTime - (reloadTime / 3)));
         if (IsReloadingTime < reloadTime / 3)
         {
-            weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y - (0.5f / (reloadTime / 3)), weapon.transform.position.z);
+            if (isToBottom)
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.removeMagSound);
 
+                isToBottom = false;
+            }
+
+            weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y - (0.5f / (reloadTime / 3)), weapon.transform.position.z);
         }
         else if (IsReloadingTime > reloadTime - (reloadTime / 3))
         {
+            if (!isToBottom)
+            {
+                SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.reloadingSound);
+
+                isToBottom = true;
+            }
+
             weapon.transform.position = new Vector3(weapon.transform.position.x, weapon.transform.position.y + (0.5f / (reloadTime / 3)), weapon.transform.position.z);
         }
     }
@@ -316,31 +353,59 @@ public class Weapon : MonoBehaviour
 
             if (!zoomed)
             {
-                crosshair.GetComponent<RawImage>().texture = sniperCrosshair;
-                crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
-                if (Camera.main.fieldOfView > zoomFOV)
+                if (weapon.name.Contains("Sniper"))
                 {
-                    Camera.main.fieldOfView -= zoomTime * zoomMultiplyer;
+                    crosshair.GetComponent<RawImage>().texture = sniperCrosshair;
+                    crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+
+                    if (Camera.main.fieldOfView > zoomFOV)
+                    {
+                        Camera.main.fieldOfView -= zoomTime * zoomMultiplyer;
+                    }
+                    else
+                    {
+                        zooming = false;
+                        zoomed = true;
+                    }
                 }
                 else
                 {
+                    Camera.main.fieldOfView -= 20;
+
+                    weapon.transform.position = weapon.GetChild(0).transform.position;
+                    weapon.GetChild(1).gameObject.SetActive(false);
+                    crosshair.SetActive(false);
+
                     zooming = false;
                     zoomed = true;
                 }
             }
             else
             {
-
-                if (Camera.main.fieldOfView < baseFOV)
+                if (weapon.name.Contains("Sniper"))
                 {
-                    Camera.main.fieldOfView += zoomTime * zoomMultiplyer;
+                    if (Camera.main.fieldOfView < baseFOV)
+                    {
+                        Camera.main.fieldOfView += zoomTime * zoomMultiplyer;
+                    }
+                    else
+                    {
+                        zooming = false;
+                        zoomed = false;
+                        crosshair.GetComponent<RawImage>().texture = baseCrosshair;
+                        crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(crosshairSize, crosshairSize);
+                    }
                 }
                 else
                 {
+                    Camera.main.fieldOfView = baseFOV;
+
+                    weapon.transform.position = weapon.parent.transform.position;
+                    weapon.GetChild(1).gameObject.SetActive(true);
+                    crosshair.SetActive(true);
+
                     zooming = false;
                     zoomed = false;
-                    crosshair.GetComponent<RawImage>().texture = baseCrosshair;
-                    crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(crosshairSize, crosshairSize);
                 }
             }
         }

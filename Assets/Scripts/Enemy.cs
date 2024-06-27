@@ -28,7 +28,8 @@ public class Enemy : MonoBehaviour
     public GameObject weaponPrefabToDisplay;
 
     private float timePatroling = 5f;
-    
+    public GlobalReferences globalReferences;
+
     void Start()
     {
         fireRange = chaseRange - chaseRange / 3;
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("PlayerTag").transform;
 
         animator = GetComponent<Animator>();
+        globalReferences = GameObject.Find("GlobalReferences").GetComponent<GlobalReferences>();
 
         SetRandomPatrolPoint();
     }
@@ -150,6 +152,10 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.manDie);
+
+            globalReferences.ActiveHitMarkerRed();
+
             animator.SetBool("isWalking", false);
             animator.SetBool("isFiring", false);
             animator.SetTrigger("DIE");
@@ -159,6 +165,10 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            SoundManager.Instance.audioSource.PlayOneShot(SoundManager.Instance.manHurt);
+
+            globalReferences.ActiveHitMarkerWhite();
+
             animator.SetBool("isWalking", false);
             animator.SetBool("isFiring", false);
             animator.SetTrigger("DAMAGE");

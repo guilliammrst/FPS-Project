@@ -9,13 +9,6 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     public string shooter;
 
-    public GlobalReferences globalReferences;
-
-    void Start()
-    {
-        globalReferences = GameObject.Find("GlobalReferences").GetComponent<GlobalReferences>();
-    }
-
     private void OnCollisionEnter(Collision objectWeHit)
     {
         GameObject hit = objectWeHit.gameObject;
@@ -57,13 +50,7 @@ public class Bullet : MonoBehaviour
                 }
                 enemy.TakeDamage(damage);
 
-                if ( enemy.currentHealth <= 0 )
-                {
-                    globalReferences.ActiveHitMarkerRed();
-                }
-                else {
-                    globalReferences.ActiveHitMarkerWhite();
-                }
+                
 
                 print("Enemy HP: " + enemy.currentHealth);
             }
