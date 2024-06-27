@@ -17,6 +17,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip manDie;
     public AudioClip weaponDropSound;
     public AudioClip pickUpAmmoBoxSound;
+    public AudioClip grenadeExplosion;
 
     private void Awake()
     {

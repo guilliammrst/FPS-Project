@@ -39,6 +39,16 @@ public class PickUpItem : MonoBehaviour
                     PickUpWeapon(hit.transform.gameObject);
                 }
             }
+            else if (hit.transform.CompareTag("Grenade"))
+            {
+                pickupText.GetComponent<Text>().text = "Press E to pick up grenade";
+                pickupText.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickUpGrenade(hit.transform.gameObject);
+                }
+            }
         }
         else
         {
@@ -111,5 +121,16 @@ public class PickUpItem : MonoBehaviour
         // Destroy the old weapon and the on the ground weapon
         Destroy(weapon.gameObject);
         Destroy(playerWeapon.gameObject);
+    }
+
+    private void PickUpGrenade(GameObject grenade)
+    {
+        PlayerSystem player = GameObject.FindGameObjectWithTag("PlayerTag").GetComponent<PlayerSystem>();
+        if (player != null)
+        {
+            player.numberOfGrenades++;
+        }
+
+        Destroy(grenade);
     }
 }
