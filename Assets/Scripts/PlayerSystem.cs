@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSystem : MonoBehaviour
 {
@@ -25,17 +26,23 @@ public class PlayerSystem : MonoBehaviour
 
     private Vector3 lastPosition = new Vector3(0f, 0f, 0f);
 
+    public int numberOfGrenades = 0;
+    public float throwForce = 40f;
+    public float forceMultiplier = 0;
+    public GameObject grenadePrefab;
+    public GameObject throwableSpawn;
+    public Text grenadeCountText;
     
     void Start()
     {
         currentHealth = maxHealth;
         controller = GetComponent<CharacterController>();
+        grenadeCountText = GameObject.Find("GrenadeCountHUD").GetComponent<Text>();
     }
 
-    
+
     void Update()
     {
-        
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         
@@ -61,7 +68,6 @@ public class PlayerSystem : MonoBehaviour
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        
         velocity.y += gravity * Time.deltaTime;
 
         
@@ -78,7 +84,21 @@ public class PlayerSystem : MonoBehaviour
 
         lastPosition = gameObject.transform.position;
 
-        
+        if (Input.GetKey(KeyCode.F))
+        {
+            forceMultiplier += Time.deltaTime;
+        }
+
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            if (numberOfGrenades > 0)
+            {
+                ThrowGrenade();
+
+                forceMultiplier = 0;
+            }
+        }
+
         if (hasTakenDamage)
         {
             damageTimer += Time.deltaTime;
@@ -89,9 +109,11 @@ public class PlayerSystem : MonoBehaviour
                 damageTimer = 0f;
             }
         }
+
+        grenadeCountText.text = numberOfGrenades.ToString();
     }
 
-        public void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         currentHealth -= damage;
 
@@ -130,5 +152,16 @@ public class PlayerSystem : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    private void ThrowGrenade()
+    {
+        GameObject grenade = Instantiate(grenadePrefab, throwableSpawn.transform.position, Camera.main.transform.rotation);
+        
+        Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        rb.AddForce(Camera.main.transform.forward * (throwForce * forceMultiplier), ForceMode.Impulse);
+
+        grenade.GetComponent<Throwable>().hasBeenThrown = true;
+        numberOfGrenades--;
     }
 }
