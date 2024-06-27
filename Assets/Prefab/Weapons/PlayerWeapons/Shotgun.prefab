@@ -114,6 +114,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7558265431996858083}
   - {fileID: 3660100116407266980}
   - {fileID: 4261931345373913261}
   - {fileID: 5035619105928522256}
@@ -178,7 +179,7 @@ MonoBehaviour:
   magazineSize: 5
   magazineBullets: 0
   numberOfBulletsRemaining: 0
-  reloadTime: 750
+  reloadTime: 500
   IsReloadingTime: 0
   weapon: {fileID: 6322459597138111926}
   weaponPrefab: {fileID: 4364646985718777836, guid: 2318269bec5687e499e6e73bab1a64e8, type: 3}
@@ -217,6 +218,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1053305679860394002}
+  m_Father: {fileID: 6322459597138111926}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4350654702948434074
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7558265431996858083}
+  m_Layer: 6
+  m_Name: WeaponZoomPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7558265431996858083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350654702948434074}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.1, y: 0.11, z: 0.277}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 6322459597138111926}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5324633941589310342

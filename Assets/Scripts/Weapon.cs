@@ -117,7 +117,7 @@ public class Weapon : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.R) || magazineBullets == 0)
                 {
                     isReloading = true;
                                       
@@ -128,19 +128,12 @@ public class Weapon : MonoBehaviour
                     Reload();
                 }
 
-                if (magazineBullets == 0)
-                {
-                    //print("Press R to Reload !!");
-                    isReloading = true;// ----> Auto Reload when out of ammo
-                }
-
                 //HUD
                 bulletCountText.text = $"{magazineBullets}/{numberOfBulletsRemaining}";
             }
 
             // Zooming function
-            if (weapon.name.Contains("Sniper"))
-            {
+            
                 if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     print(weapon.name);
@@ -151,7 +144,7 @@ public class Weapon : MonoBehaviour
 
 
                 }
-            }
+            
 
             zoomFunction();
         }
@@ -360,31 +353,59 @@ public class Weapon : MonoBehaviour
 
             if (!zoomed)
             {
-                crosshair.GetComponent<RawImage>().texture = sniperCrosshair;
-                crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
-                if (Camera.main.fieldOfView > zoomFOV)
+                if (weapon.name.Contains("Sniper"))
                 {
-                    Camera.main.fieldOfView -= zoomTime * zoomMultiplyer;
+                    crosshair.GetComponent<RawImage>().texture = sniperCrosshair;
+                    crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+
+                    if (Camera.main.fieldOfView > zoomFOV)
+                    {
+                        Camera.main.fieldOfView -= zoomTime * zoomMultiplyer;
+                    }
+                    else
+                    {
+                        zooming = false;
+                        zoomed = true;
+                    }
                 }
                 else
                 {
+                    Camera.main.fieldOfView -= 20;
+
+                    weapon.transform.position = weapon.GetChild(0).transform.position;
+                    weapon.GetChild(1).gameObject.SetActive(false);
+                    crosshair.SetActive(false);
+
                     zooming = false;
                     zoomed = true;
                 }
             }
             else
             {
-
-                if (Camera.main.fieldOfView < baseFOV)
+                if (weapon.name.Contains("Sniper"))
                 {
-                    Camera.main.fieldOfView += zoomTime * zoomMultiplyer;
+                    if (Camera.main.fieldOfView < baseFOV)
+                    {
+                        Camera.main.fieldOfView += zoomTime * zoomMultiplyer;
+                    }
+                    else
+                    {
+                        zooming = false;
+                        zoomed = false;
+                        crosshair.GetComponent<RawImage>().texture = baseCrosshair;
+                        crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(crosshairSize, crosshairSize);
+                    }
                 }
                 else
                 {
+                    Camera.main.fieldOfView = baseFOV;
+
+                    weapon.transform.position = weapon.parent.transform.position;
+                    weapon.GetChild(1).gameObject.SetActive(true);
+                    crosshair.SetActive(true);
+
                     zooming = false;
                     zoomed = false;
-                    crosshair.GetComponent<RawImage>().texture = baseCrosshair;
-                    crosshair.GetComponent<RectTransform>().sizeDelta = new Vector2(crosshairSize, crosshairSize);
                 }
             }
         }

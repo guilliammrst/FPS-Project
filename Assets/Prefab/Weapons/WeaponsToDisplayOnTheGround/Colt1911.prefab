@@ -96,7 +96,7 @@ MonoBehaviour:
   magazineSize: 7
   magazineBullets: 0
   numberOfBulletsRemaining: 0
-  reloadTime: 300
+  reloadTime: 150
   IsReloadingTime: 0
   weapon: {fileID: 6772868191399287757}
   weaponPrefab: {fileID: 2742668662388421658}
