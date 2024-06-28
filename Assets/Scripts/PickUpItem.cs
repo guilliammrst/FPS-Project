@@ -39,7 +39,7 @@ public class PickUpItem : MonoBehaviour
                     PickUpWeapon(hit.transform.gameObject);
                 }
             }
-            else if (hit.transform.CompareTag("Grenade"))
+            else if (hit.transform.CompareTag("Grenade") && !hit.transform.GetComponent<Throwable>().hasBeenThrown)
             {
                 pickupText.GetComponent<Text>().text = "Press E to pick up grenade";
                 pickupText.SetActive(true);
