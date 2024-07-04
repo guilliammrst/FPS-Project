@@ -16,6 +16,7 @@ TagManager:
   - Weapon
   - FxTemporaire
   - Grenade
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

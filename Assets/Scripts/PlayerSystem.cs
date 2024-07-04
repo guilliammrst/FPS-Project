@@ -147,11 +147,7 @@ public class PlayerSystem : MonoBehaviour
     {
         Debug.Log("Le joueur est mort.");
     
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
+        SceneManager.Instance.GameOver();
     }
 
     private void ThrowGrenade()
