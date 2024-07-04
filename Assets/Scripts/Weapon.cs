@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour
 
     //Crosshair variables 
     public GameObject crosshair;
-    public float crosshairSize = 20f;
+    public readonly float crosshairSize = 40f;
     public Texture2D baseCrosshair;
     public Texture2D sniperCrosshair;
 
@@ -92,7 +92,7 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (weapon.CompareTag("PlayerWeapon"))
+        if (weapon.CompareTag("PlayerWeapon") && !SceneManager.Instance.gamePaused)
         { 
             if (weapon.parent.name != null)
             {
