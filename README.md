@@ -7,6 +7,13 @@ Ce projet était en groupe de 3.
 - Unity (editor version 2022.3.15f1)
 - C#
 
+## A savoir
+Les fichiers C# sont dans le dossier Assets/Scripts. Ils sont structurés avec quelques principales fonctions intégrées par Unity :
+- Awake : appelée lorsque l'instance du script est chargée
+- Start : appelée avant la première image après que toutes les méthodes Awake ont été appelées
+- Update : appelée à chaque frame du jeu (si 60 FPS alors appelée 60 fois par secondes)
+- OnDestroy : appelée juste avant que l'objet ne soit détruit
+
 ## Pour tester ce projet sur votre machine
 Via UnityHub :
 1) Cloner le repos
